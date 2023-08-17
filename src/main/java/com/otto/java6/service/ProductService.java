@@ -6,12 +6,12 @@ import com.otto.java6.entity.Product;
 
 public interface ProductService {
 	
-	Product SAVEPRODUCT(Product product);
+	Product saveProduct(Product product);
 	
-	List<Product> GETALLPRODUCT();
+	List<Product> getAllProduct();
 	
-	Product UPDATEPRODUCT(Product product, Long id);
+	Product updateProduct(Product product, Long id);
 	
-	Product DELETEPRODUCT(Long id);
+	Product deleteProduct(Long id);
 	
 }

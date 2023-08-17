@@ -1,49 +1,139 @@
 package com.otto.java6.entity;
 
 import java.util.Collection;
+import java.util.List;
 
-import org.hibernate.annotations.NaturalId;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.UniqueConstraint;
+import lombok.Builder;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Builder
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	Integer id;
+	@Basic
+	@Column(nullable = false)
+	String username;
+	@Column(nullable = false)
+	String lastname;
+	String firstname;
+	String country;
+	String password;
+	@Enumerated(EnumType.STRING)
+	Role role;
 
-	@Column(name = "first_name", nullable = false)
-	private String firstName;
+	public User(Integer id, String username, String lastname, String firstname, String country, String password,
+			Role role) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.lastname = lastname;
+		this.firstname = firstname;
+		this.country = country;
+		this.password = password;
+		this.role = role;
+	}
 
-	@Column(name = "last_name", nullable = false)
-	private String lastName;
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-	@NaturalId(mutable = true)
-	private String email;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority((role.name())));
+	}
 
-	private String password;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-	private Boolean active = false;
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
 
 }
