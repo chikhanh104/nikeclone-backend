@@ -1,5 +1,7 @@
 package com.otto.java6.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +25,7 @@ public class Order {
 	private Long id;
 
 	@Column(name = "update_date")
-	private String updateDate;
+	private LocalDateTime updatedate;
 
 	@Column(name = "quantity", nullable = false)
 	private int quantity;
@@ -42,5 +44,8 @@ public class Order {
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
+	@Column(name = "status")
+	private String status;
+	
 	private Double price;
 }

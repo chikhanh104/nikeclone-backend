@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.otto.java6.entity.Brand;
 import com.otto.java6.entity.Product;
+import com.otto.java6.repository.BrandRepository;
 import com.otto.java6.repository.ProductRepository;
 import com.otto.java6.service.ProductService;
 
@@ -17,11 +19,21 @@ import lombok.RequiredArgsConstructor;
 public class ProductServiceImpl implements ProductService {
 
 	private final ProductRepository productRepository;
+	private final BrandRepository brandRepository;
 
 	@Override
 	public Product saveProduct(Product product) {
 		// TODO Auto-generated method stub
-		return productRepository.save(product);
+		Long brandId = product.getBrand().getId();
+        Brand brand = brandRepository.findById(brandId).orElse(null);
+        if (brand != null) {
+            product.setBrand(brand);
+			product.setUpdatedate(LocalDateTime.now());
+            return productRepository.save(product);
+        } else {
+            // Handle brand not found
+            return null;
+        }
 	}
 
 	@Override
@@ -36,11 +48,11 @@ public class ProductServiceImpl implements ProductService {
 		Optional<Product> existingProduct = productRepository.findById(id);
 		if (existingProduct.isPresent()) {
 			Product updateProduct = existingProduct.get();
-			updateProduct.setProductName(product.getProductName());
-			updateProduct.setProductPrice(product.getProductPrice());
-			updateProduct.setProductImage(product.getProductImage());
-			updateProduct.setProductDescription(product.getProductDescription());
-			updateProduct.setUpdateDate(LocalDateTime.now());
+			updateProduct.setProductname(product.getProductname());
+			updateProduct.setProductprice(product.getProductprice());
+			updateProduct.setProductimage(product.getProductimage());
+			updateProduct.setProductdescription(product.getProductdescription());
+			updateProduct.setUpdatedate(LocalDateTime.now());
 			return productRepository.save(updateProduct);
 		}
 		return null;

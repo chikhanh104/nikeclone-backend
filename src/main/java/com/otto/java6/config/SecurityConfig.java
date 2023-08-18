@@ -18,19 +18,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final JwtAuthenticationFilter jwtAuthenticationFilter;
-	private final AuthenticationProvider authProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authProvider;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(
-						authRequest -> authRequest.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
-				.sessionManagement(
-						sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authenticationProvider(authProvider)
-				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
-
-	}
-
+    // Configure the security filter chain
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF protection
+            .authorizeHttpRequests(
+                authRequest -> authRequest
+                    .requestMatchers("/auth/**","/api/v1/brands/view","/api/v1/products/view").permitAll() // Allow unauthenticated access to /auth/**
+                    .anyRequest().authenticated() // Require authentication for all other requests
+            )
+            .sessionManagement(
+                sessionManager -> sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Set session creation policy to STATELESS
+            )
+            .authenticationProvider(authProvider) // Set the custom authentication provider
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add custom JWT authentication filter before UsernamePasswordAuthenticationFilter
+            .build();
+    }
 }
+
+

@@ -33,7 +33,7 @@ public class BrandServiceImpl implements BrandService {
 		Optional<Brand> existingBrand = brandRepository.findById(id);
 		if (existingBrand.isPresent()) {
 			Brand updatedBrand = existingBrand.get();
-			updatedBrand.setBrandName(brand.getBrandName());
+			updatedBrand.setBrandname(brand.getBrandname());
 			return brandRepository.save(updatedBrand);
 		}
 		return null;
@@ -47,5 +47,12 @@ public class BrandServiceImpl implements BrandService {
 			return brand.get();
 		}
 		return null;
+	}
+
+	@Override
+	public Brand getBrandById(Long id) {
+		// TODO Auto-generated method stub
+		Optional<Brand> optionalBrand = brandRepository.findById(id);
+        return optionalBrand.orElse(null);
 	}
 }
