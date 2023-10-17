@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.otto</groupId>
-	<artifactId>java6</artifactId>
+	<artifactId>authentication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>java6</name>
-	<description>Asm Java 6</description>
+	<name>authentication</name>
+	<description>Authentication Spring</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
